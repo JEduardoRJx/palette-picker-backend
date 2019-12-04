@@ -1,0 +1,23 @@
+{
+  "name": "palette-picker-backend",
+  "version": "1.0.0",
+  "description": "## Contributors - [J. Eduardo Rodriguez](https://github.com/JEduardoRJx) - [Lacy Rudd](https://github.com/dawnlunacy)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JEduardoRJx/palette-picker-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JEduardoRJx/palette-picker-backend/issues"
+  },
+  "homepage": "https://github.com/JEduardoRJx/palette-picker-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
