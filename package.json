@@ -1,0 +1,32 @@
+{
+  "name": "palette-picker-backend",
+  "version": "1.0.0",
+  "description": "## Contributors - [J. Eduardo Rodriguez](https://github.com/JEduardoRJx) - [Lacy Rudd](https://github.com/dawnlunacy)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JEduardoRJx/palette-picker-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JEduardoRJx/palette-picker-backend/issues"
+  },
+  "homepage": "https://github.com/JEduardoRJx/palette-picker-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.20.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/node": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "supertest": "^4.0.2"
+  }
+}
