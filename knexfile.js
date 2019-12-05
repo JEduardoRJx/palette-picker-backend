@@ -3,10 +3,10 @@ module.exports = {
   development: {
     client: 'pg',
     connection: 'postgres://localhost/tone_zone',
-   migrations: {
+    migrations: {
       directory: './db/migrations'
     },
-seeds: {
+    seeds: {
       directory: './db/seeds/dev'
     },
     useNullAsDefault: true
@@ -14,10 +14,10 @@ seeds: {
   test: {
     client: 'pg',
     connection: 'postgres://localhost/tone_zone_test',
-   migrations: {
+    migrations: {
       directory: './db/migrations'
     },
-seeds: {
+    seeds: {
       directory: './db/seeds/test'
     },
     useNullAsDefault: true
