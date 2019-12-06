@@ -95,7 +95,7 @@ describe('Server', () => {
     const { id } = expectedPalette;
 
     //Expectation
-    const response = await response(app).get('/api/v1/:user_id/projects/:project_id/palettes/:palette_id');
+    const response = await response(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${id}`);
     const palette = response.body;
 
     //Execution
