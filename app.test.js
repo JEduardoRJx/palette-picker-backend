@@ -30,20 +30,47 @@ describe('Server', () => {
       //Expectation
       expect(response.status).toBe(200);
       expect(projects).toEqual(expectedProjects);
-    })
-  })
+    });
+  });
 
   describe('GET /api/v1/:user_id/projects/:project_id', () => {
     it('should return a 200 status code and all of the specified users specific project', () => {
       //Setup
       const expectedProject = await database('projects').first();
-
+      const { id } = expectedProject;
       //Exection
-      const response = await request(app).get('/api/v1/1/projects/1');
+      const response = await request(app).get(`/api/v1/${id}/projects/1`);
       const project = response.body
       //Expectation
-      expect(response.state).toBe(200);
+      expect(response.status).toBe(200);
       expect(project).toEqual(expectedProject);
-    })
-  })
+    });
+  });
+
+  describe('GET /api/v1/:user_id/projects/:project_id/palettes', () => {
+    //Setup
+    const expectedPalettes = await database('palettes').first();
+    const { id } = expectedPalettes;
+    //Execution
+    const response = await request(app).get('/api/v1/1/projects/1/palettes');
+    const paletes = response.body;
+
+    //Expectation
+    expect(response.status).toBe(200);
+    expect(palettes).toEqual(expectedPalettes)
+  });
+
+  describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id', () => {
+    //Setup
+    const expectedPalette = await database('palettes').first();
+    const { id } = expectedPalette;
+
+    //Expectation
+    const response = await response(app).get('/api/v1/:user_id/projects/:project_id/palettes/:palette_id');
+    const palette = response.body;
+
+    //Execution
+    expect(response.status).toBe(200);
+    expect(palette).toEqual(expectedPalette);
+  });
 });
