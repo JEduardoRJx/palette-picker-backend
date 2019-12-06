@@ -12,7 +12,7 @@ describe('Server', () => {
   })
 
   describe('init', () => {
-    it.skip('should return a 200 status', async () => {
+    it('should return a 200 status', async () => {
       const res = await request(app).get('/')
       expect(res.status).toBe(200)
     });
@@ -93,29 +93,29 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id',  () => {
-    it.skip('should return a status code of 200 and the specific palette requested', async () => {
+      it.skip('should return a status code of 200 and the specific palette requested', async () => {
 
-      //Setup
-    const expectedPalette = await database('palettes').first();
-    const { id } = expectedPalette;
+        //Setup
+      const expectedPalette = await database('palettes').first();
+      const { id } = expectedPalette;
 
-    //Expectation
-    const response = await response(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${id}`);
-    const palette = response.body;
+      //Expectation
+      const response = await response(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${id}`);
+      const palette = response.body;
 
-    //Execution
-    expect(response.status).toBe(200);
-    expect(palette).toEqual(expectedPalette);
+      //Execution
+      expect(response.status).toBe(200);
+      expect(palette).toEqual(expectedPalette);
+      });
+
+    it.skip('should return a 404 and the message "Palette not found" ', async () => {
+
+      const invalidID = -1;
+
+      const response = await request(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${invalidID}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual('Palette not found');
     });
-  });
-
-  it.skip('should return a 404 and the message "Palette not found" ', async () => {
-
-    const invalidID = -1;
-
-    const response = await request(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${invalidID}`);
-
-    expect(response.status).toBe(404);
-    expect(response.body.error).toEqual('Palette not found');
   });
 });
