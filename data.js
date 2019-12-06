@@ -2,6 +2,7 @@
 
 const users = [
   {
+    id: 1,
     username: 'user',
     password: 'pass'
   }
@@ -9,18 +10,22 @@ const users = [
 
 const projects = [
   {
+    project_id: 1,
     project_name: 'fall',
     user_id: 1
   },
   {
+    project_id: 2,
     project_name: 'winter',
     user_id: 1
   },
   {
+    project_id: 3,
     project_name: 'spring',
     user_id: 1
   },
   {
+    project_id: 4,
     project_name: 'summer',
     user_id: 1
   }
