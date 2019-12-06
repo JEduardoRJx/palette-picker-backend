@@ -56,6 +56,7 @@ describe('Server', () => {
     });
 
     it.skip('should return a 404 and the message "Project not found" ', async () => {
+      
       const invalidID = -1;
 
       const response = await request(app).get(`/api/v1/:user_id/projects/${invalidID}`);
@@ -67,6 +68,7 @@ describe('Server', () => {
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes',  () => {
     it.skip('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
+
       //Setup
     const expectedPalettes = await database('palettes').first();
     const { id } = expectedPalettes;
@@ -80,6 +82,7 @@ describe('Server', () => {
     });
 
     it.skip('should return a 404 and the message "Project not found, no palettes to return" ', async () => {
+
       const invalidID = -1;
 
       const response = await request(app).get(`/api/v1/:user_id/projects/${invalidID}/palettes`);
@@ -91,6 +94,7 @@ describe('Server', () => {
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id',  () => {
     it.skip('should return a status code of 200 and the specific palette requested', async () => {
+
       //Setup
     const expectedPalette = await database('palettes').first();
     const { id } = expectedPalette;
@@ -106,6 +110,7 @@ describe('Server', () => {
   });
 
   it.skip('should return a 404 and the message "Palette not found" ', async () => {
+
     const invalidID = -1;
 
     const response = await request(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${invalidID}`);
