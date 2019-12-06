@@ -89,8 +89,8 @@ describe('Server', () => {
     });
   });
 
-  describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id', async () => {
-    it('should return a status code of 200 and the specific palette requested', () => {
+  describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id',  () => {
+    it('should return a status code of 200 and the specific palette requested', async () => {
       //Setup
     const expectedPalette = await database('palettes').first();
     const { id } = expectedPalette;
