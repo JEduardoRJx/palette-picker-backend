@@ -19,7 +19,7 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects', () => {
-    it('should return 200 status code and all of the specified users projects', async() => {
+    it('should return 200 status code and all of the specified users projects', async () => {
       //Setup
       const expectedProjects = await database('projects').first();
       console.log(expectedProjects)
@@ -31,10 +31,19 @@ describe('Server', () => {
       expect(response.status).toBe(200);
       expect(projects).toEqual(expectedProjects);
     });
+
+    it('should return a 404 and the message "User not found" ', async () => {
+      const invalidID = -1;
+
+      const response = await request(app).get(`/api/v1/${invalidID}/projects`);
+
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual('User not found');
+    })
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id', () => {
-    it('should return a 200 status code and all of the specified users specific project', () => {
+    it('should return a 200 status code and all of the specified users specific project', async () => {
       //Setup
       const expectedProject = await database('projects').first();
       const { id } = expectedProject;
@@ -45,22 +54,33 @@ describe('Server', () => {
       expect(response.status).toBe(200);
       expect(project).toEqual(expectedProject);
     });
+
+    it('should return a 404 and the message "Project not found" ', async () => {
+      const invalidID = -1;
+
+      const response = await request(app).get(`/api/v1/:user_id/projects/${invalidID}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual('Project not found');
+    });
   });
 
-  describe('GET /api/v1/:user_id/projects/:project_id/palettes', () => {
-    //Setup
+  describe('GET /api/v1/:user_id/projects/:project_id/palettes',  () => {
+    it('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
+      //Setup
     const expectedPalettes = await database('palettes').first();
     const { id } = expectedPalettes;
     //Execution
-    const response = await request(app).get('/api/v1/1/projects/1/palettes');
+    const response = await request(app).get(`/api/v1/1/projects/${id}/palettes`);
     const paletes = response.body;
 
     //Expectation
     expect(response.status).toBe(200);
     expect(palettes).toEqual(expectedPalettes)
+    });
   });
 
-  describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id', () => {
+  describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id', async () => {
     //Setup
     const expectedPalette = await database('palettes').first();
     const { id } = expectedPalette;
