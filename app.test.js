@@ -72,7 +72,7 @@ describe('Server', () => {
     const { id } = expectedPalettes;
     //Execution
     const response = await request(app).get(`/api/v1/1/projects/${id}/palettes`);
-    const paletes = response.body;
+    const palettes = response.body;
 
     //Expectation
     expect(response.status).toBe(200);
@@ -90,7 +90,8 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id', async () => {
-    //Setup
+    it('should return a status code of 200 and the specific palette requested', () => {
+      //Setup
     const expectedPalette = await database('palettes').first();
     const { id } = expectedPalette;
 
@@ -101,7 +102,9 @@ describe('Server', () => {
     //Execution
     expect(response.status).toBe(200);
     expect(palette).toEqual(expectedPalette);
+    });
   });
+
   it('should return a 404 and the message "Palette not found" ', async () => {
     const invalidID = -1;
 
