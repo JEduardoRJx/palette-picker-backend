@@ -29,6 +29,7 @@ exports.up = (knex) => {
     })
   ]);
 };
+
 exports.down = (knex) => {
   return Promise.all([
     knex.schema.dropTable('palettes'),
