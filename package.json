@@ -4,7 +4,8 @@
   "description": "## Contributors - [J. Eduardo Rodriguez](https://github.com/JEduardoRJx) - [Lacy Rudd](https://github.com/dawnlunacy)",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test": "jest --forceExit",
+    "test:watch": "jest --watchAll",
     "start": "nodemon --exec babel-node server.js"
   },
   "repository": {
@@ -30,6 +31,7 @@
     "@babel/core": "^7.7.4",
     "@babel/node": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
+    "jest": "^24.9.0",
     "supertest": "^4.0.2"
   }
 }
