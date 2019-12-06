@@ -78,6 +78,15 @@ describe('Server', () => {
     expect(response.status).toBe(200);
     expect(palettes).toEqual(expectedPalettes)
     });
+
+    it('should return a 404 and the message "Project not found, no palettes to return" ', async () => {
+      const invalidID = -1;
+
+      const response = await request(app).get(`/api/v1/:user_id/projects/${invalidID}/palettes`);
+
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual('Project not found, no palettes to return');
+    });
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id', async () => {
@@ -92,5 +101,13 @@ describe('Server', () => {
     //Execution
     expect(response.status).toBe(200);
     expect(palette).toEqual(expectedPalette);
+  });
+  it('should return a 404 and the message "Palette not found" ', async () => {
+    const invalidID = -1;
+
+    const response = await request(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${invalidID}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.error).toEqual('Palette not found');
   });
 });
