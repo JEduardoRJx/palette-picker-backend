@@ -21,7 +21,11 @@ app.get('/api/v1/:user_id/projects', async (request, response) => {
     const projects = await database('projects')
       .select()
       .where('user_id', user_id)
-      response.status(200).json(projects);
+      if (projects.length) {
+        response.status(200).json(projects);
+      } else {
+        response.status(404).json({ error: "User not found" })
+      }
   } catch(error) {
     response.status(500).json({ error });
   }

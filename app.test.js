@@ -19,7 +19,7 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects', () => {
-    it.skip('should return 200 status code and all of the specified users projects', async () => {
+    it('should return 200 status code and all of the specified users projects', async () => {
       //Setup
       const user = await database('users').first();
       const { id } = user;
@@ -38,7 +38,7 @@ describe('Server', () => {
       expect(projects).toEqual(expectedProjects);
     });
 
-    it.skip('should return a 404 and the message "User not found" ', async () => {
+    it('should return a 404 and the message "User not found" ', async () => {
       const invalidID = -1;
 
       const response = await request(app).get(`/api/v1/${invalidID}/projects`);
