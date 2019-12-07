@@ -53,19 +53,13 @@ describe('Server', () => {
       //Setup
       let expectedUser = await database('users').first();
       const user_id = expectedUser.id
-      console.log("user_id", user_id)
-      // 
-      // console.log("extepectedUser", expectedUser)
       let expectedProject = await database('projects').first()
         .select()
         .where('user_id', user_id)
-      console.log("expectedProject", expectedProject)
       expectedProject = [expectedProject].map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
       const { id } = expectedProject[0];
-      console.log("id", id)
       //Exection
       const response = await request(app).get(`/api/v1/${user_id}/projects/${id}`);
-      console.log("RESPONSE BODY", response.body[0])
       let project = response.body[0]
       project = [project].map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
       //Expectation
