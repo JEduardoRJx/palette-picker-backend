@@ -137,7 +137,6 @@ describe('Server', () => {
           .select()
           .where('user_id', user_id)
         const project_id = expectedProject.id;
-        console.log("project_id", project_id)
         //Setup
         let expectedPalette = await database('palettes').first()
           .select()
@@ -153,7 +152,6 @@ describe('Server', () => {
           color5: palette.color5,}))
         //Expectation
         const response = await request(app).get(`/api/v1/${user_id}/projects/${project_id}/palettes/${id}`);
-        console.log("RESPONSE",response.body)
         let palette = response.body[0];
         palette = [palette].map(curPalette => ({id: curPalette.id,
           palette_name: curPalette.palette_name,
