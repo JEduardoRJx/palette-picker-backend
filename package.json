@@ -4,7 +4,7 @@
   "description": "## Contributors - [J. Eduardo Rodriguez](https://github.com/JEduardoRJx) - [Lacy Rudd](https://github.com/dawnlunacy)",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test" : "jest --forceExit",
     "start": "nodemon --exec babel-node server.js"
   },
   "repository": {
