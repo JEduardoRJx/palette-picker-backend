@@ -83,18 +83,15 @@ describe('Server', () => {
     it('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
       let expectedUser = await database('users').first();
       const user_id = expectedUser.id
-      console.log("userID", user_id)
 
       let expectedProject = await database('projects').first()
         .select()
         .where('user_id', user_id)
       const project_id = expectedProject.id;
-      console.log("project_id", project_id)
       //Setup
       let expectedPalettes = await database('palettes')
         .select()
         .where('project_id', project_id)
-        console.log("expectedPalettes", expectedPalettes)
         expectedPalettes = expectedPalettes.map(palette => ({id: palette.id,
           palette_name: palette.palette_name,
           project_id: palette.project_id,
@@ -103,10 +100,8 @@ describe('Server', () => {
           color3: palette.color3,
           color4: palette.color4,
           color5: palette.color5,}))
-    // const { id } = expectedPalettes;
     //Execution
     const response = await request(app).get(`/api/v1/${user_id}/projects/${project_id}/palettes`);
-    console.log("response", response.body)
     let palettes = response.body;
     palettes = palettes.map(palette => ({id: palette.id,
       palette_name: palette.palette_name,
