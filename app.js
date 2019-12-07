@@ -21,7 +21,11 @@ app.get('/api/v1/:user_id/projects', async (request, response) => {
     const projects = await database('projects')
       .select()
       .where('user_id', user_id)
-      response.status(200).json(projects);
+      if (projects.length) {
+        response.status(200).json(projects);
+      } else {
+        response.status(404).json({ error: "User not found" })
+      }
   } catch(error) {
     response.status(500).json({ error });
   }
@@ -31,12 +35,15 @@ app.get('/api/v1/:user_id/projects', async (request, response) => {
 app.get('/api/v1/:user_id/projects/:id', async (request, response) => {
   try {
     const { user_id, id } = request.params;
-    console.log(user_id, id)
     const projects = await database('projects')
       .select()
       .where('user_id', user_id)
       .where('id', id)
-    response.status(200).json(projects);
+      if (projects.length) {
+        response.status(200).json(projects);
+      } else {
+        response.status(404).json({ error: "Project not found" })
+      }
   } catch(error) {
     response.status(500).json({ error });
   }
@@ -45,12 +52,16 @@ app.get('/api/v1/:user_id/projects/:id', async (request, response) => {
 // GET all palettes from a user
 app.get('/api/v1/:user_id/projects/:project_id/palettes', async (request, response) => {
   try {
-    const { user_id, project_id } = request.params;
+    const { project_id } = request.params;
     const palettes = await database('palettes')
       .select()
-      .where('id', user_id)
       .where('project_id', project_id)
-      response.status(200).json(palettes);
+      if(palettes.length) {
+        response.status(200).json(palettes);
+      } else {
+        response.status(404).json({ error: "Project not found, no palettes to return" })
+
+      }
   } catch {
     response.status(500).json({ error });
   }
@@ -59,17 +70,19 @@ app.get('/api/v1/:user_id/projects/:project_id/palettes', async (request, respon
 // GET a specific pallete from a user
 app.get('/api/v1/:user_id/projects/:project_id/palettes/:id', async (request, response) => {
   try {
-    const { user_id, project_id, id } = request.params;
+    const { project_id, id } = request.params;
     const project = await database('projects')
     .select()
-    .where('user_id', user_id)
     .where('id', project_id)
-
     const palettes = await database('palettes')
       .select()
       .where('project_id', project[0].id)
       .where('id', id)
-      response.status(200).json(palettes);
+      if(palettes.length) {
+        response.status(200).json(palettes);
+      } else {
+        response.status(404).json({ error: "Palette not found" })
+      }
   } catch(error) {
     response.status(500).json({ error });
   }

@@ -38,7 +38,7 @@ describe('Server', () => {
       expect(projects).toEqual(expectedProjects);
     });
 
-    it.skip('should return a 404 and the message "User not found" ', async () => {
+    it('should return a 404 and the message "User not found" ', async () => {
       const invalidID = -1;
 
       const response = await request(app).get(`/api/v1/${invalidID}/projects`);
@@ -49,23 +49,30 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id', () => {
-    it.skip('should return a 200 status code and all of the specified users specific project', async () => {
+    it('should return a 200 status code and all of the specified users specific project', async () => {
       //Setup
-      const expectedProject = await database('projects').first();
-      const { id } = expectedProject;
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
+      let expectedProject = await database('projects').first()
+        .select()
+        .where('user_id', user_id)
+      expectedProject = [expectedProject].map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
+      const { id } = expectedProject[0];
       //Exection
-      const response = await request(app).get(`/api/v1/${id}/projects/1`);
-      const project = response.body
+      const response = await request(app).get(`/api/v1/${user_id}/projects/${id}`);
+      let project = response.body[0]
+      project = [project].map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
       //Expectation
       expect(response.status).toBe(200);
       expect(project).toEqual(expectedProject);
     });
 
-    it.skip('should return a 404 and the message "Project not found" ', async () => {
-      
+    it('should return a 404 and the message "Project not found" ', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
       const invalidID = -1;
 
-      const response = await request(app).get(`/api/v1/:user_id/projects/${invalidID}`);
+      const response = await request(app).get(`/api/v1/${user_id}/projects/${invalidID}`);
 
       expect(response.status).toBe(404);
       expect(response.body.error).toEqual('Project not found');
@@ -73,21 +80,44 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes',  () => {
-    it.skip('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
+    it('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
 
+      let expectedProject = await database('projects').first()
+        .select()
+        .where('user_id', user_id)
+      const project_id = expectedProject.id;
       //Setup
-    const expectedPalettes = await database('palettes').first();
-    const { id } = expectedPalettes;
+      let expectedPalettes = await database('palettes')
+        .select()
+        .where('project_id', project_id)
+        expectedPalettes = expectedPalettes.map(palette => ({id: palette.id,
+          palette_name: palette.palette_name,
+          project_id: palette.project_id,
+          color1: palette.color1,
+          color2: palette.color2,
+          color3: palette.color3,
+          color4: palette.color4,
+          color5: palette.color5,}))
     //Execution
-    const response = await request(app).get(`/api/v1/1/projects/${id}/palettes`);
-    const palettes = response.body;
+    const response = await request(app).get(`/api/v1/${user_id}/projects/${project_id}/palettes`);
+    let palettes = response.body;
+    palettes = palettes.map(palette => ({id: palette.id,
+      palette_name: palette.palette_name,
+      project_id: palette.project_id,
+      color1: palette.color1,
+      color2: palette.color2,
+      color3: palette.color3,
+      color4: palette.color4,
+      color5: palette.color5,}))
 
     //Expectation
     expect(response.status).toBe(200);
     expect(palettes).toEqual(expectedPalettes)
     });
 
-    it.skip('should return a 404 and the message "Project not found, no palettes to return" ', async () => {
+    it('should return a 404 and the message "Project not found, no palettes to return" ', async () => {
 
       const invalidID = -1;
 
@@ -99,26 +129,55 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id',  () => {
-      it.skip('should return a status code of 200 and the specific palette requested', async () => {
+      it('should return a status code of 200 and the specific palette requested', async () => {
+        let expectedUser = await database('users').first();
+          const user_id = expectedUser.id
 
+        let expectedProject = await database('projects').first()
+          .select()
+          .where('user_id', user_id)
+        const project_id = expectedProject.id;
         //Setup
-      const expectedPalette = await database('palettes').first();
-      const { id } = expectedPalette;
+        let expectedPalette = await database('palettes').first()
+          .select()
+          .where('project_id', project_id)
+        const { id } = expectedPalette;
+        expectedPalette = [expectedPalette].map(palette => ({id: palette.id,
+          palette_name: palette.palette_name,
+          project_id: palette.project_id,
+          color1: palette.color1,
+          color2: palette.color2,
+          color3: palette.color3,
+          color4: palette.color4,
+          color5: palette.color5,}))
+        //Expectation
+        const response = await request(app).get(`/api/v1/${user_id}/projects/${project_id}/palettes/${id}`);
+        let palette = response.body[0];
+        palette = [palette].map(curPalette => ({id: curPalette.id,
+          palette_name: curPalette.palette_name,
+          project_id: curPalette.project_id,
+          color1: curPalette.color1,
+          color2: curPalette.color2,
+          color3: curPalette.color3,
+          color4: curPalette.color4,
+          color5: curPalette.color5,}))
 
-      //Expectation
-      const response = await response(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${id}`);
-      const palette = response.body;
 
-      //Execution
-      expect(response.status).toBe(200);
-      expect(palette).toEqual(expectedPalette);
+
+        //Execution
+        expect(response.status).toBe(200);
+        expect(palette).toEqual(expectedPalette);
       });
 
-    it.skip('should return a 404 and the message "Palette not found" ', async () => {
+    it('should return a 404 and the message "Palette not found" ', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
 
+      let expectedProject = await database('projects').first()
+      const project_id = expectedProject.id
       const invalidID = -1;
 
-      const response = await request(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${invalidID}`);
+      const response = await request(app).get(`/api/v1/${user_id}/projects/${project_id}/palettes/${invalidID}`);
 
       expect(response.status).toBe(404);
       expect(response.body.error).toEqual('Palette not found');
