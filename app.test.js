@@ -169,11 +169,15 @@ describe('Server', () => {
         expect(palette).toEqual(expectedPalette);
       });
 
-    it.skip('should return a 404 and the message "Palette not found" ', async () => {
+    it('should return a 404 and the message "Palette not found" ', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
 
+      let expectedProject = await database('projects').first()
+      const project_id = expectedProject.id
       const invalidID = -1;
 
-      const response = await request(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${invalidID}`);
+      const response = await request(app).get(`/api/v1/${user_id}/projects/${project_id}/palettes/${invalidID}`);
 
       expect(response.status).toBe(404);
       expect(response.body.error).toEqual('Palette not found');
