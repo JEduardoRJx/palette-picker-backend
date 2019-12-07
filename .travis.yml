@@ -4,6 +4,8 @@ node_js:
 services:
   - postgresql
 before_script:
-  - psql -c 'CREATE DATABASE tone_zone_test;' -U postgres
+  - psql -c 'create database tone_zone_test;' -U postgres
+  - knex migrate:latest --env=test
+  - knex seed:run --env=test
 notifications:
   email: false
