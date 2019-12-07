@@ -35,7 +35,6 @@ app.get('/api/v1/:user_id/projects', async (request, response) => {
 app.get('/api/v1/:user_id/projects/:id', async (request, response) => {
   try {
     const { user_id, id } = request.params;
-    console.log(user_id, id)
     const projects = await database('projects')
       .select()
       .where('user_id', user_id)

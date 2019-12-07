@@ -49,13 +49,25 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id', () => {
-    it.skip('should return a 200 status code and all of the specified users specific project', async () => {
+    it('should return a 200 status code and all of the specified users specific project', async () => {
       //Setup
-      const expectedProject = await database('projects').first();
-      const { id } = expectedProject;
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
+      console.log("user_id", user_id)
+      // 
+      // console.log("extepectedUser", expectedUser)
+      let expectedProject = await database('projects').first()
+        .select()
+        .where('user_id', user_id)
+      console.log("expectedProject", expectedProject)
+      expectedProject = [expectedProject].map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
+      const { id } = expectedProject[0];
+      console.log("id", id)
       //Exection
-      const response = await request(app).get(`/api/v1/${id}/projects/1`);
-      const project = response.body
+      const response = await request(app).get(`/api/v1/${user_id}/projects/${id}`);
+      console.log("RESPONSE BODY", response.body[0])
+      let project = response.body[0]
+      project = [project].map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
       //Expectation
       expect(response.status).toBe(200);
       expect(project).toEqual(expectedProject);
