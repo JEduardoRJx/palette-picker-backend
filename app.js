@@ -39,7 +39,11 @@ app.get('/api/v1/:user_id/projects/:id', async (request, response) => {
       .select()
       .where('user_id', user_id)
       .where('id', id)
-    response.status(200).json(projects);
+      if (projects.length) {
+        response.status(200).json(projects);
+      } else {
+        response.status(404).json({ error: "Project not found" })
+      }
   } catch(error) {
     response.status(500).json({ error });
   }
