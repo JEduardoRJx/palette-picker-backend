@@ -117,7 +117,7 @@ describe('Server', () => {
     expect(palettes).toEqual(expectedPalettes)
     });
 
-    it.skip('should return a 404 and the message "Project not found, no palettes to return" ', async () => {
+    it('should return a 404 and the message "Project not found, no palettes to return" ', async () => {
 
       const invalidID = -1;
 
