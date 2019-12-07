@@ -67,11 +67,12 @@ describe('Server', () => {
       expect(project).toEqual(expectedProject);
     });
 
-    it.skip('should return a 404 and the message "Project not found" ', async () => {
-      
+    it('should return a 404 and the message "Project not found" ', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
       const invalidID = -1;
 
-      const response = await request(app).get(`/api/v1/:user_id/projects/${invalidID}`);
+      const response = await request(app).get(`/api/v1/${user_id}/projects/${invalidID}`);
 
       expect(response.status).toBe(404);
       expect(response.body.error).toEqual('Project not found');
