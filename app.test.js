@@ -80,14 +80,15 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes',  () => {
-    it.skip('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
-
+    it('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
       //Setup
-    const expectedPalettes = await database('palettes').first();
+    let expectedPalettes = await database('palettes').first();
     const { id } = expectedPalettes;
     //Execution
-    const response = await request(app).get(`/api/v1/1/projects/${id}/palettes`);
-    const palettes = response.body;
+    const response = await request(app).get(`/api/v1/${user_id}/projects/${id}/palettes`);
+    let palettes = response.body[0];
 
     //Expectation
     expect(response.status).toBe(200);
