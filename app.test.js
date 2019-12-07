@@ -129,19 +129,46 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id',  () => {
-      it.skip('should return a status code of 200 and the specific palette requested', async () => {
+      it('should return a status code of 200 and the specific palette requested', async () => {
+        let expectedUser = await database('users').first();
+          const user_id = expectedUser.id
 
+        let expectedProject = await database('projects').first()
+          .select()
+          .where('user_id', user_id)
+        const project_id = expectedProject.id;
+        console.log("project_id", project_id)
         //Setup
-      const expectedPalette = await database('palettes').first();
-      const { id } = expectedPalette;
+        let expectedPalette = await database('palettes').first()
+          .select()
+          .where('project_id', project_id)
+        const { id } = expectedPalette;
+        expectedPalette = [expectedPalette].map(palette => ({id: palette.id,
+          palette_name: palette.palette_name,
+          project_id: palette.project_id,
+          color1: palette.color1,
+          color2: palette.color2,
+          color3: palette.color3,
+          color4: palette.color4,
+          color5: palette.color5,}))
+        //Expectation
+        const response = await request(app).get(`/api/v1/${user_id}/projects/${project_id}/palettes/${id}`);
+        console.log("RESPONSE",response.body)
+        let palette = response.body[0];
+        palette = [palette].map(curPalette => ({id: curPalette.id,
+          palette_name: curPalette.palette_name,
+          project_id: curPalette.project_id,
+          color1: curPalette.color1,
+          color2: curPalette.color2,
+          color3: curPalette.color3,
+          color4: curPalette.color4,
+          color5: curPalette.color5,}))
 
-      //Expectation
-      const response = await response(app).get(`/api/v1/:user_id/projects/:project_id/palettes/${id}`);
-      const palette = response.body;
 
-      //Execution
-      expect(response.status).toBe(200);
-      expect(palette).toEqual(expectedPalette);
+
+        //Execution
+        expect(response.status).toBe(200);
+        expect(palette).toEqual(expectedPalette);
       });
 
     it.skip('should return a 404 and the message "Palette not found" ', async () => {
