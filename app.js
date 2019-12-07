@@ -78,7 +78,11 @@ app.get('/api/v1/:user_id/projects/:project_id/palettes/:id', async (request, re
       .select()
       .where('project_id', project[0].id)
       .where('id', id)
-      response.status(200).json(palettes);
+      if(palettes.length) {
+        response.status(200).json(palettes);
+      } else {
+        response.status(404).json({ error: "Palette not found" })
+      }
   } catch(error) {
     response.status(500).json({ error });
   }
