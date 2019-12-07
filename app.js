@@ -74,7 +74,6 @@ app.get('/api/v1/:user_id/projects/:project_id/palettes/:id', async (request, re
     const project = await database('projects')
     .select()
     .where('id', project_id)
-
     const palettes = await database('palettes')
       .select()
       .where('project_id', project[0].id)
