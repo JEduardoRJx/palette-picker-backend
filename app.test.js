@@ -21,11 +21,17 @@ describe('Server', () => {
   describe('GET /api/v1/:user_id/projects', () => {
     it.skip('should return 200 status code and all of the specified users projects', async () => {
       //Setup
-      const expectedProjects = await database('projects').first();
-      console.log(expectedProjects)
+      const user = await database('users').first();
+      const { id } = user;
+      let expectedProjects = await database('projects')
+        .select()
+        .where('user_id', id)
+        expectedProjects = expectedProjects.map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
+      
       //Execution
-      const response = await request(app).get('/api/v1/1/projects');
-      const projects = response.body;
+      const response = await request(app).get(`/api/v1/${id}/projects`);
+      let projects = response.body
+      projects = projects.map(project => ({id: project.id, user_id: project.user_id, project_name: project.project_name}))
 
       //Expectation
       expect(response.status).toBe(200);
