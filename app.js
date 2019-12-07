@@ -56,7 +56,12 @@ app.get('/api/v1/:user_id/projects/:project_id/palettes', async (request, respon
     const palettes = await database('palettes')
       .select()
       .where('project_id', project_id)
-      response.status(200).json(palettes);
+      if(palettes.length) {
+        response.status(200).json(palettes);
+      } else {
+        response.status(404).json({ error: "Project not found, no palettes to return" })
+
+      }
   } catch {
     response.status(500).json({ error });
   }
