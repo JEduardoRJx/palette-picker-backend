@@ -19,7 +19,7 @@ describe('Server', () => {
   });
 
   describe('GET /api/v1/:user_id/projects', () => {
-    it('should return 200 status code and all of the specified users projects', async () => {
+    it.skip('should return 200 status code and all of the specified users projects', async () => {
       //Setup
       const user = await database('users').first();
       const { id } = user;
