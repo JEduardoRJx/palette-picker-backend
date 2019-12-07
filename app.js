@@ -52,10 +52,9 @@ app.get('/api/v1/:user_id/projects/:id', async (request, response) => {
 // GET all palettes from a user
 app.get('/api/v1/:user_id/projects/:project_id/palettes', async (request, response) => {
   try {
-    const { user_id, project_id } = request.params;
+    const { project_id } = request.params;
     const palettes = await database('palettes')
       .select()
-      .where('id', user_id)
       .where('project_id', project_id)
       response.status(200).json(palettes);
   } catch {
@@ -66,10 +65,9 @@ app.get('/api/v1/:user_id/projects/:project_id/palettes', async (request, respon
 // GET a specific pallete from a user
 app.get('/api/v1/:user_id/projects/:project_id/palettes/:id', async (request, response) => {
   try {
-    const { user_id, project_id, id } = request.params;
+    const { project_id, id } = request.params;
     const project = await database('projects')
     .select()
-    .where('user_id', user_id)
     .where('id', project_id)
 
     const palettes = await database('palettes')
