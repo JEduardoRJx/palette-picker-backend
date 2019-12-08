@@ -299,7 +299,6 @@ describe('Server', () => {
     describe('DELETE /api/v1/:user_id/projects/:project_id/palettes/:palette_id', () => {
       it('should return a status of 204 when successfully deleted', async () => {
         const expectedPalette = await database('palettes').first()
-        // console.log(expectedPalette)
         const expectedUser = await database('projects')
           .where({ id: expectedPalette.project_id })
         
