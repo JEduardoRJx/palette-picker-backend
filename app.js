@@ -158,7 +158,7 @@ app.delete('/api/v1/:user_id/projects/:project_id', async (request, response) =>
     .where({ id : project_id})
     .del();
 
-    response.status(204).json({ message: `Project ${deleteProject.project_name} has been deleted`})
+    response.status(204).json()
   } catch(error) {
     response.status(500).json({ error })
   }
@@ -179,7 +179,6 @@ app.delete('/api/v1/:user_id/projects/:project_id/palettes/:palette_id', async (
     .where({ project_id: project_id})
     .where({ id: palette_id})
     .del();
-
     response.status(204).json()
   } catch(error) {
     response.status(500).json({ error })
