@@ -202,6 +202,17 @@ describe('Server', () => {
     expect(project.project_name).toBe(newProject.project_name)
     expect(project.user_id).toBe(newProject.user_id)
 
+    });
+
+    it('should return a status 422 and the message "POST failed, missing the required key:"', async () => {
+      const newProject = { project_name: 'Halloween' };
+
+      const response = await request(app)
+        .post(`/api/v1/2/projects`)
+        .send(newProject);
+      
+      expect(response.status).toBe(422);
+      expect(response.text.includes("POST failed, missing the required key: user_id")).toBe(true)
     })
-  })
+  });
 });
