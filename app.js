@@ -112,13 +112,31 @@ app.post('/api/v1/:user_id/projects', async (request, response) => {
 })
 
 // Post a new palette
-// app.post('/api/v1/:user_id/projects/:project_id/palettes', async (request, response) => {
-//   try {
-
-//   } catch(error) {
-    
-//   }
-// })
+app.post('/api/v1/:user_id/projects/:project_id/palettes', async (request, response) => {
+  const palette = request.body;
+  for (let key of [
+    'palette_name',
+    'project_id',
+    'color1',
+    'color2',
+    'color3',
+    'color4',
+    'color5'
+  ]) {
+    if(!palette[key]) {
+      return response.status(422).send({ error: `POST failed, missing the required key: ${key}`});
+    }
+  }
+  try {
+    const newPalette = await database('palettes').insert(palette, 'id');
+    const postedPalette = await database('palettes')
+      .select()
+      .where('id', newPalette[0])
+    response.status(201).json({ id: newPalette[0], message: `Palette ${postedPalette[0].palette_name} has been created with an id of ${postedPalette[0].id}`})
+  } catch(error) {
+    response.status(500).json({ error })
+  }
+})
 
 // DELETE a project
 // app.delete('/api/v1/:user_id/projects/:project_id', async (request, response) => {
