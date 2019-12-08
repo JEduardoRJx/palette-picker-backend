@@ -246,5 +246,27 @@ describe('Server', () => {
       expect(palette.project_id).toEqual(newPalette.project_id)
       expect(palette.color1).toEqual(newPalette.color1)
     });
+    
+    it('should return a status of 422 and the message "POST failed, missing the required key:"', async () => {
+      let expectedProject = await database('projects')
+        .select()
+        .where('project_name', 'winter')
+      
+      const newPalette = {
+        palette_name: "christmas-colors",
+        project_id: expectedProject[0].id,
+        color1: "#FF1D15",
+        color2: "#E13700",
+        color3: "#2F632F",
+        color4: "#3EC300",
+      }
+ 
+      const response = await request(app)
+        .post(`/api/v1/${expectedProject[0].user_id}/projects/${expectedProject[0].id}/palettes`)
+        .send(newPalette)
+
+      expect(response.status).toBe(422)
+      expect(response.text.includes("POST failed, missing the required key: color5")).toBe(true)
+    })
   });
 });
