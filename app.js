@@ -165,13 +165,27 @@ app.delete('/api/v1/:user_id/projects/:project_id', async (request, response) =>
 })
 
 // DELETE a palette
-// app.delete('/api/v1/:user_id/projects/:project_id/palettes/:palette_id', async (request, response) => {
-//   try {
+app.delete('/api/v1/:user_id/projects/:project_id/palettes/:palette_id', async (request, response) => {
+  const { project_id, palette_id } = request.params;
+  try {
+    const paletteToDelete = await database('palettes')
+      .where({ project_id: project_id})
+      .where({ id: palette_id})
+      console.log("pale", paletteToDelete)
+    if (!paletteToDelete.length) {
+      return response.status(400).send({error: `Could not find palette with the id: ${palette_id}`})
+    }
 
-//   } catch(error) {
-    
-//   }
-// })
+    const deletePalette = await database('palettes')
+    .where({ project_id: project_id})
+    .where({ id: palette_id})
+    .del();
+
+    response.status(204).json()
+  } catch(error) {
+    response.status(500).json({ error })
+  }
+})
 
 // PUT/PATCH
 // - A Project
