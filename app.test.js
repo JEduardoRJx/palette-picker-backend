@@ -271,7 +271,7 @@ describe('Server', () => {
   });
 
   describe('DELETE /api/v1/:user_id/projects/:project_id', () => {
-    it('should return a status code of 204 ', async () => {
+    it('should return a status code of 204 when successfully deleted', async () => {
       const expectedProject = await database('projects').first()
     
       const response = await request(app)
@@ -285,6 +285,16 @@ describe('Server', () => {
       expect(checkForDeletion.id).not.toBe(expectedProject.id)
       expect(palettesAfter.length).toBe(0)
     });
+
+    it('should return a status code of 404 when requested item to delete cannot be found', async () => {
+      let expectedProject = await database('projects').first()
+
+      const response = await request(app)
+        .delete(`/api/v1/${expectedProject.user_id}/projects/${expectedProject.id + 100}`)
+        
+        expect(response.status).toBe(404)
+        expect(response.body.error.includes("Could not find project")).toBe(true)
+      });
   });
 });
 
