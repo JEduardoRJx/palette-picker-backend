@@ -295,6 +295,28 @@ describe('Server', () => {
         expect(response.status).toBe(404)
         expect(response.body.error.includes("Could not find project")).toBe(true)
       });
+
+    describe('DELETE /api/v1/:user_id/projects/:project_id/palettes/:palette_id', () => {
+      it('should return a status of 204 when successfully deleted', async () => {
+        const expectedPalette = await database('palettes').first()
+        // console.log(expectedPalette)
+        const expectedUser = await database('projects')
+          .where({ id: expectedPalette.project_id })
+        
+        const response = await request(app)
+          .delete(`/api/v1/${expectedUser[0].user_id}/projects/${expectedPalette.project_id}/palettes/${expectedPalette.id}`)
+
+        const checkForDeletion = await database('palettes')
+          .where({id: expectedPalette.id})
+        
+        expect(response.status).toBe(204)
+        expect(checkForDeletion.length).toBe(0)
+      });
+    });
   });
+
+
+
+  
 });
 
