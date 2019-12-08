@@ -269,4 +269,25 @@ describe('Server', () => {
       expect(response.text.includes("POST failed, missing the required key: color5")).toBe(true)
     })
   });
+
+  describe('DELETE /api/v1/:user_id/:project_id', () => {
+    it('should return a status code of 204 and a message of "Successfully deleted"', async () => {
+      const expectedProject = await database('projects').first()
+      console.log(expectedProject)
+
+      const response = await request(app)
+      .delete(`/api/v1/${expectedProject.user_id}/${expectedProject.id}`)
+    
+    console.log("RESPONSE-STATUS", response.status)
+    console.log("response", response.body)
+
+      const checkForDeletion = await database('projects').first()
+      console.log("Deleted?", checkForDeletion)
+
+      expect(response.status).toBe(204)
+      expect(response.text.includes("Successfully deleted")).toBe(true)
+      expect(checkForDeletion).not.toBe(expectedProject)
+    });
+  });
 });
+
