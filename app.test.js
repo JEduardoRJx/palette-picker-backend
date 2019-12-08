@@ -270,18 +270,6 @@ describe('Server', () => {
     })
   });
 
-  describe('DELETE /api/v1/:user_id/projects/:project_id', () => {
-    it('should return a status code of 204 ', async () => {
-      const expectedProject = await database('projects').first()
 
-      const response = await request(app)
-        .delete(`/api/v1/${expectedProject.user_id}/projects/${expectedProject.id}`)
-    
-      const checkForDeletion = await database('projects').first()
-
-      expect(response.status).toBe(204)
-      expect(checkForDeletion.id).not.toBe(expectedProject.id)
-    });
-  });
 });
 
