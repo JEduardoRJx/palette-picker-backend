@@ -311,6 +311,19 @@ describe('Server', () => {
         expect(response.status).toBe(204)
         expect(checkForDeletion.length).toBe(0)
       });
+
+      it('should return a status code of 404 when requested palette to delete cannot be found', async () => {
+        let expectedPalette = await database('palettes').first();
+
+        const expectedUser = await database('projects')
+          .where({ id: expectedPalette.project_id })
+
+        const response = await request(app)
+        .delete(`/api/v1/${expectedUser[0].user_id}/projects/${expectedPalette.project_id}/palettes/${expectedPalette.id + 100}`)
+
+        expect(response.status).toBe(404)
+        expect(response.body.error.includes("Could not find palette")).toBe(true)
+      });
     });
   });
 
