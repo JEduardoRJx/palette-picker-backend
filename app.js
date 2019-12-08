@@ -140,13 +140,14 @@ app.post('/api/v1/:user_id/projects/:project_id/palettes', async (request, respo
 
 // DELETE a project
 app.delete('/api/v1/:user_id/projects/:project_id', async (request, response) => {
-  const { project_id } = request.params
+  const { user_id, project_id } = request.params
   try {
     const projectToDelete = await database('projects')
+    .where({user_id: user_id})
     .where({ id : project_id})
     .select()
       if (!projectToDelete.length) {
-        return response.status(404).send({error: `Could not find project with the id: ${project_id}`})
+        return response.status(404).send({error: `Could not find project with the id: ${project_id} belonging to user with id: ${user_id}`})
       }
 
     const palettesToDelete = await database('palettes')
