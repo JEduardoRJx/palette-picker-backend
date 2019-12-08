@@ -88,4 +88,57 @@ app.get('/api/v1/:user_id/projects/:project_id/palettes/:id', async (request, re
   }
 })
 
+// POST a new project
+app.post('/api/v1/:user_id/projects', async (request, response) => {
+  const project = request.body;
+  for ( let key of [
+    'project_name',
+    'user_id'
+  ]) {
+    if (!project[key]) {
+      return response.status(422).send({ error: `POST failed, missing the required key: ${key}`});
+    }
+  }
+  
+  try {
+    const newProject = await database('projects').insert(project, 'id');
+    const postedProject = await database('projects')
+      .select()
+      .where('id', newProject[0])
+    response.status(201).json({ id: newProject[0], message: `Project ${postedProject[0].project_name} has been created with an id of ${postedProject[0].id}`})
+  } catch(error) {
+    response.status(500).json({ error });
+  }
+})
+
+// Post a new palette
+// app.post('/api/v1/:user_id/projects/:project_id/palettes', async (request, response) => {
+//   try {
+
+//   } catch(error) {
+    
+//   }
+// })
+
+// DELETE a project
+// app.delete('/api/v1/:user_id/projects/:project_id', async (request, response) => {
+//   try {
+
+//   } catch(error) {
+    
+//   }
+// })
+// DELETE a palette
+// app.delete('/api/v1/:user_id/projects/:project_id/palettes/:palette_id', async (request, response) => {
+//   try {
+
+//   } catch(error) {
+    
+//   }
+// })
+
+// PUT/PATCH
+// - A Project
+// - A palette
+
 export default app;
