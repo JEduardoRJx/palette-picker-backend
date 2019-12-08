@@ -215,4 +215,36 @@ describe('Server', () => {
       expect(response.text.includes("POST failed, missing the required key: user_id")).toBe(true)
     })
   });
+
+  describe('POST /api/v1/:user_id/projects/:project_id/palettes', () => {
+    it('should return a status of 201 and add a new palette to the database', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
+      let expectedProject = await database('projects')
+        .select()
+        .where('project_name', 'winter')
+      const newPalette = {
+        palette_name: "christmas-colors",
+        project_id: expectedProject[0].id,
+        color1: "#FF1D15",
+        color2: "#E13700",
+        color3: "#2F632F",
+        color4: "#3EC300",
+        color5: "#00991C"
+      }
+
+      const response = await request(app)
+        .post(`/api/v1/${user_id}/projects/${expectedProject.id}/palettes`)
+        .send(newPalette)
+      const palettes = await database('palettes')
+        .where('id', response.body.id)
+        .select()
+      const palette = palettes[0]
+
+      expect(response.status).toBe(201);
+      expect(palette.palette_name).toEqual(newPalette.palette_name)
+      expect(palette.project_id).toEqual(newPalette.project_id)
+      expect(palette.color1).toEqual(newPalette.color1)
+    });
+  });
 });
