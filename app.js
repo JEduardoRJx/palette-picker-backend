@@ -172,7 +172,7 @@ app.delete('/api/v1/:user_id/projects/:project_id/palettes/:palette_id', async (
       .where({ project_id: project_id})
       .where({ id: palette_id})
       if (!paletteToDelete.length) {
-      return response.status(400).send({error: `Could not find palette with the id: ${palette_id}`})
+      return response.status(404).send({error: `Could not find palette with the id: ${palette_id}`})
     }
 
     const deletePalette = await database('palettes')
