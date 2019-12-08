@@ -81,6 +81,7 @@ describe('Server', () => {
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes',  () => {
     it('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
+      //Setup
       let expectedUser = await database('users').first();
       const user_id = expectedUser.id
 
@@ -88,7 +89,6 @@ describe('Server', () => {
         .select()
         .where('user_id', user_id)
       const project_id = expectedProject.id;
-      //Setup
       let expectedPalettes = await database('palettes')
         .select()
         .where('project_id', project_id)
@@ -130,6 +130,7 @@ describe('Server', () => {
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id',  () => {
       it('should return a status code of 200 and the specific palette requested', async () => {
+        //Setup
         let expectedUser = await database('users').first();
           const user_id = expectedUser.id
 
@@ -137,7 +138,6 @@ describe('Server', () => {
           .select()
           .where('user_id', user_id)
         const project_id = expectedProject.id;
-        //Setup
         let expectedPalette = await database('palettes').first()
           .select()
           .where('project_id', project_id)
@@ -183,4 +183,25 @@ describe('Server', () => {
       expect(response.body.error).toEqual('Palette not found');
     });
   });
+
+  describe('POST /api/v1/:user_id/projects', () => {
+    it('should return a status of 201 and add a new project to the database', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
+      const newProject = { project_name: 'Christmas', user_id: user_id }
+
+    const response = await request(app)
+      .post(`/api/v1/${newProject.user_id}/projects`)
+      .send(newProject);
+    const projects = await database('projects')
+      .where('id', response.body.id)
+      .select();
+    const project = projects[0];
+
+    expect(response.status).toBe(201);
+    expect(project.project_name).toBe(newProject.project_name)
+    expect(project.user_id).toBe(newProject.user_id)
+
+    })
+  })
 });
