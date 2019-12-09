@@ -271,5 +271,61 @@ describe('Server', () => {
   });
 
 
+  describe('DELETE /api/v1/:user_id/projects/:project_id', () => {
+    it('should return a status code of 204 when successfully deleted', async () => {
+      const expectedProject = await database('projects').first()
+    
+      const response = await request(app)
+        .delete(`/api/v1/${expectedProject.user_id}/projects/${expectedProject.id}`)
+    
+      const checkForDeletion = await database('projects').first()
+      const palettesAfter = await database('palettes')
+        .where({ project_id: expectedProject.id})
+
+      expect(response.status).toBe(204)
+      expect(checkForDeletion.id).not.toBe(expectedProject.id)
+      expect(palettesAfter.length).toBe(0)
+    });
+
+    it('should return a status code of 404 when requested item to delete cannot be found', async () => {
+      let expectedProject = await database('projects').first()
+
+      const response = await request(app)
+        .delete(`/api/v1/${expectedProject.user_id}/projects/${expectedProject.id + 100}`)
+        
+        expect(response.status).toBe(404)
+        expect(response.body.error.includes("Could not find project")).toBe(true)
+      });
+
+    describe('DELETE /api/v1/:user_id/projects/:project_id/palettes/:palette_id', () => {
+      it('should return a status of 204 when successfully deleted', async () => {
+        const expectedPalette = await database('palettes').first()
+        const expectedUser = await database('projects')
+          .where({ id: expectedPalette.project_id })
+        
+        const response = await request(app)
+          .delete(`/api/v1/${expectedUser[0].user_id}/projects/${expectedPalette.project_id}/palettes/${expectedPalette.id}`)
+
+        const checkForDeletion = await database('palettes')
+          .where({id: expectedPalette.id})
+        
+        expect(response.status).toBe(204)
+        expect(checkForDeletion.length).toBe(0)
+      });
+
+      it('should return a status code of 404 when requested palette to delete cannot be found', async () => {
+        let expectedPalette = await database('palettes').first();
+
+        const expectedUser = await database('projects')
+          .where({ id: expectedPalette.project_id })
+
+        const response = await request(app)
+        .delete(`/api/v1/${expectedUser[0].user_id}/projects/${expectedPalette.project_id}/palettes/${expectedPalette.id + 100}`)
+
+        expect(response.status).toBe(404)
+        expect(response.body.error.includes("Could not find palette")).toBe(true)
+      });
+    });
+  });
 });
 
