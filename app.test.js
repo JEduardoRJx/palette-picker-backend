@@ -81,6 +81,7 @@ describe('Server', () => {
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes',  () => {
     it('should return a status code of 200 and return all palettes from a specified users specific project', async () => {
+      //Setup
       let expectedUser = await database('users').first();
       const user_id = expectedUser.id
 
@@ -88,7 +89,6 @@ describe('Server', () => {
         .select()
         .where('user_id', user_id)
       const project_id = expectedProject.id;
-      //Setup
       let expectedPalettes = await database('palettes')
         .select()
         .where('project_id', project_id)
@@ -130,6 +130,7 @@ describe('Server', () => {
 
   describe('GET /api/v1/:user_id/projects/:project_id/palettes/:palette_id',  () => {
       it('should return a status code of 200 and the specific palette requested', async () => {
+        //Setup
         let expectedUser = await database('users').first();
           const user_id = expectedUser.id
 
@@ -137,7 +138,6 @@ describe('Server', () => {
           .select()
           .where('user_id', user_id)
         const project_id = expectedProject.id;
-        //Setup
         let expectedPalette = await database('palettes').first()
           .select()
           .where('project_id', project_id)
@@ -183,4 +183,152 @@ describe('Server', () => {
       expect(response.body.error).toEqual('Palette not found');
     });
   });
+
+  describe('POST /api/v1/:user_id/projects', () => {
+    it('should return a status of 201 and add a new project to the database', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
+      const newProject = { project_name: 'Christmas', user_id: user_id }
+
+    const response = await request(app)
+      .post(`/api/v1/${newProject.user_id}/projects`)
+      .send(newProject);
+    const projects = await database('projects')
+      .where('id', response.body.id)
+      .select();
+    const project = projects[0];
+
+    expect(response.status).toBe(201);
+    expect(project.project_name).toBe(newProject.project_name)
+    expect(project.user_id).toBe(newProject.user_id)
+
+    });
+
+    it('should return a status 422 and the message "POST failed, missing the required key:"', async () => {
+      const newProject = { project_name: 'Halloween' };
+
+      const response = await request(app)
+        .post(`/api/v1/2/projects`)
+        .send(newProject);
+      
+      expect(response.status).toBe(422);
+      expect(response.text.includes("POST failed, missing the required key: user_id")).toBe(true)
+    })
+  });
+
+  describe('POST /api/v1/:user_id/projects/:project_id/palettes', () => {
+    it('should return a status of 201 and add a new palette to the database', async () => {
+      let expectedUser = await database('users').first();
+      const user_id = expectedUser.id
+      let expectedProject = await database('projects')
+        .select()
+        .where('project_name', 'winter')
+      const newPalette = {
+        palette_name: "christmas-colors",
+        project_id: expectedProject[0].id,
+        color1: "#FF1D15",
+        color2: "#E13700",
+        color3: "#2F632F",
+        color4: "#3EC300",
+        color5: "#00991C"
+      }
+
+      const response = await request(app)
+        .post(`/api/v1/${user_id}/projects/${expectedProject.id}/palettes`)
+        .send(newPalette)
+      const palettes = await database('palettes')
+        .where('id', response.body.id)
+        .select()
+      const palette = palettes[0]
+
+      expect(response.status).toBe(201);
+      expect(palette.palette_name).toEqual(newPalette.palette_name)
+      expect(palette.project_id).toEqual(newPalette.project_id)
+      expect(palette.color1).toEqual(newPalette.color1)
+    });
+    
+    it('should return a status of 422 and the message "POST failed, missing the required key:"', async () => {
+      let expectedProject = await database('projects')
+        .select()
+        .where('project_name', 'winter')
+      
+      const newPalette = {
+        palette_name: "christmas-colors",
+        project_id: expectedProject[0].id,
+        color1: "#FF1D15",
+        color2: "#E13700",
+        color3: "#2F632F",
+        color4: "#3EC300",
+      }
+ 
+      const response = await request(app)
+        .post(`/api/v1/${expectedProject[0].user_id}/projects/${expectedProject[0].id}/palettes`)
+        .send(newPalette)
+
+      expect(response.status).toBe(422)
+      expect(response.text.includes("POST failed, missing the required key: color5")).toBe(true)
+    })
+  });
+
+  describe('DELETE /api/v1/:user_id/projects/:project_id', () => {
+    it('should return a status code of 204 when successfully deleted', async () => {
+      const expectedProject = await database('projects').first()
+    
+      const response = await request(app)
+        .delete(`/api/v1/${expectedProject.user_id}/projects/${expectedProject.id}`)
+    
+      const checkForDeletion = await database('projects').first()
+      const palettesAfter = await database('palettes')
+        .where({ project_id: expectedProject.id})
+
+      expect(response.status).toBe(204)
+      expect(checkForDeletion.id).not.toBe(expectedProject.id)
+      expect(palettesAfter.length).toBe(0)
+    });
+
+    it('should return a status code of 404 when requested item to delete cannot be found', async () => {
+      let expectedProject = await database('projects').first()
+
+      const response = await request(app)
+        .delete(`/api/v1/${expectedProject.user_id}/projects/${expectedProject.id + 100}`)
+        
+        expect(response.status).toBe(404)
+        expect(response.body.error.includes("Could not find project")).toBe(true)
+      });
+
+    describe('DELETE /api/v1/:user_id/projects/:project_id/palettes/:palette_id', () => {
+      it('should return a status of 204 when successfully deleted', async () => {
+        const expectedPalette = await database('palettes').first()
+        const expectedUser = await database('projects')
+          .where({ id: expectedPalette.project_id })
+        
+        const response = await request(app)
+          .delete(`/api/v1/${expectedUser[0].user_id}/projects/${expectedPalette.project_id}/palettes/${expectedPalette.id}`)
+
+        const checkForDeletion = await database('palettes')
+          .where({id: expectedPalette.id})
+        
+        expect(response.status).toBe(204)
+        expect(checkForDeletion.length).toBe(0)
+      });
+
+      it('should return a status code of 404 when requested palette to delete cannot be found', async () => {
+        let expectedPalette = await database('palettes').first();
+
+        const expectedUser = await database('projects')
+          .where({ id: expectedPalette.project_id })
+
+        const response = await request(app)
+        .delete(`/api/v1/${expectedUser[0].user_id}/projects/${expectedPalette.project_id}/palettes/${expectedPalette.id + 100}`)
+
+        expect(response.status).toBe(404)
+        expect(response.body.error.includes("Could not find palette")).toBe(true)
+      });
+    });
+  });
+
+
+
+  
 });
+
