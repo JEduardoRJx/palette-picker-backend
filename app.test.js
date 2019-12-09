@@ -270,6 +270,7 @@ describe('Server', () => {
     })
   });
 
+
   describe('DELETE /api/v1/:user_id/projects/:project_id', () => {
     it('should return a status code of 204 when successfully deleted', async () => {
       const expectedProject = await database('projects').first()
@@ -326,9 +327,5 @@ describe('Server', () => {
       });
     });
   });
-
-
-
-  
 });
 
