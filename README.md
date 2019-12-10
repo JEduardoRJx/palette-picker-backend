@@ -297,7 +297,7 @@ Will update a current projects name
 ```
 </details>
 
-# PATCH Update A Palettes Name For A User
+## PATCH Update A Palettes Name For A User
 `PATCH /api/v1/:user_id/projects/:project_id/palettes/:id`
 <details>
 Will update a current palettes name
