@@ -185,8 +185,47 @@ app.delete('/api/v1/:user_id/projects/:project_id/palettes/:palette_id', async (
   }
 })
 
-// PUT/PATCH
-// - A Project
-// - A palette
+
+// Update a Projects Name
+app.patch('/api/v1/:user_id/projects/:id', async (request, response) => {
+  let newProject = request.params;
+  newProject.project_name = request.body.project_name
+
+  for (let key of ['user_id', 'id', 'project_name']) {
+    if (!newProject[key]) {
+      return response.status(404).send({error: `Could not find project or missing a new project name`})
+    }
+  }
+
+  try {
+    await database('projects')
+      .where('id', newProject.id)
+      .update({ project_name: newProject.project_name})
+    response.status(200).send(`Updated to ${ newProject.project_name}`)
+  } catch(error) {
+    response.status(500).json({ error })
+  }
+})
+
+// update a palettes name
+app.patch('/api/v1/:user_id/projects/:project_id/palettes/:id', async (request, response) => {
+  let newPalette = request.params;
+  newPalette.palette_name = request.body.palette_name
+
+  for (let key of ['user_id', 'project_id', 'id', 'palette_name']) {
+    if (!newPalette[key]) {
+      return response.status(404).send({error: `Could not find palette or missing a new palette name`})
+    }
+  }
+
+  try {
+    await database('palettes')
+      .where('id', newPalette.id)
+      .update({ palette_name: newPalette.palette_name})
+    response.status(200).send(`Palette's name updated to ${ newPalette.palette_name}`)
+  } catch(error) {
+    response.status(500).json({ error })
+  }
+})
 
 export default app;
