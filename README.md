@@ -233,7 +233,7 @@ Will POST a new palette under a project for a default user.
 ```
 </details>
 
-# DELETE A Project For A User
+## DELETE A Project For A User
 `DELETE /api/v1/:user_id/projects/:project_id`
 <details>
 Will POST a new palette under a project for a default user.
@@ -252,7 +252,7 @@ Will POST a new palette under a project for a default user.
 ```
 </details>
 
-# DELETE A Palette For A User
+## DELETE A Palette For A User
 `DELETE /api/v1/:user_id/projects/:project_id/palettes/:palette_id`
 <details>
 Will POST a new palette under a project for a default user.
@@ -271,7 +271,7 @@ Will POST a new palette under a project for a default user.
 ```
 </details>
 
-# PATCH Update A Projects Name For A User
+## PATCH Update A Projects Name For A User
 `PATCH /api/v1/:user_id/projects/:project_id`
 <details>
 Will update a current projects name
