@@ -327,5 +327,65 @@ describe('Server', () => {
       });
     });
   });
+
+  describe('PATCH /api/v1/:user_id/projects/:project_id', () => {
+
+    it('should return a status of 200 when successfully updating a project name', async () => {
+      const project = await database('projects')
+        .first();
+      const { id, user_id } = project;
+      const newName = {project_name: 'A new name'}
+      const response = await request(app)
+      .patch(`/api/v1/${user_id}/projects/${id}`).send(newName)
+      const newProject = await database('projects')
+        .select()
+        .where('id', id)
+
+      expect(response.status).toBe(200)
+      expect(newProject[0].project_name).toEqual(newName.project_name)
+    })
+
+    it('should return a status of 404 when renaming a project is unsuccessfull', async () => {
+      const project = await database('projects')
+        .first();
+      const { id, user_id } = project;
+      const newName = {name: 'A new name'}
+      const response = await request(app)
+      .patch(`/api/v1/${user_id}/projects/${id}`).send(newName)
+
+      expect(response.status).toBe(404)
+      expect(response.body.error).toEqual(`Could not find project or missing a new project name`)
+    });
+  });
+
+  describe('PATCH /api/v1/:user_id/projects/:project_id', () => {
+
+    it('should return a status of 200 when successfully updating a palette name', async () => {
+      const palette = await database('palettes')
+        .first();
+      const { user_id, project_id, id } = palette;
+      const newName = {palette_name: 'A new name'}
+      const response = await request(app)
+      .patch(`/api/v1/${user_id}/projects/${project_id}/palettes/${id}`).send(newName)
+      const newPalette = await database('palettes')
+        .select()
+        .where('id', id)
+
+      expect(response.status).toBe(200)
+      expect(newPalette[0].palette_name).toEqual(newName.palette_name)
+    });
+
+    it('should return a status of 404 when renaming a palette is unsuccessfull', async () => {
+      const palette = await database('palettes')
+        .first();
+      const { user_id, project_id, id } = palette;
+      const newName = {name: 'A new name'}
+      const response = await request(app)
+      .patch(`/api/v1/${user_id}/projects/${project_id}/palettes/${id}`).send(newName)
+
+      expect(response.status).toBe(404)
+      expect(response.body.error).toEqual(`Could not find palette or missing a new palette name`)
+    });
+  })
 });
 
