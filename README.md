@@ -232,3 +232,95 @@ Will POST a new palette under a project for a default user.
 }
 ```
 </details>
+
+# DELETE A Project For A User
+`DELETE /api/v1/:user_id/projects/:project_id`
+<details>
+Will POST a new palette under a project for a default user.
+
+| **Param**     | **Value**     | **Description**  |
+| ------------- |:-------------:| ----------------|
+| `user_id     `| *integer*      | **required** Which user a project is attributed to:, ex: `2` 
+| `project_id`  | *integer*     | **required** Which project you want to delete, ex: `2` |
+
+### Sample DELETE Request
+```javascript
+{
+	"user_id": 1
+	"project_id": 2,
+ }
+```
+</details>
+
+# DELETE A Palette For A User
+`DELETE /api/v1/:user_id/projects/:project_id/palettes/:palette_id`
+<details>
+Will POST a new palette under a project for a default user.
+
+| **Param**     | **Value**     | **Description**  |
+| ------------- |:-------------:| ----------------|
+| `project_id`  | *integer*     | **required** Which project a palette is attributed to:, ex: `2` 
+| `palette_id`  | *integer*     | **required** Which palette you want to delete, ex: `2` |
+
+### Sample DELETE Request
+```javascript
+{
+	"project_id": 2,
+	"palette_id": 1
+ }
+```
+</details>
+
+# PATCH Update A Projects Name For A User
+`PATCH /api/v1/:user_id/projects/:project_id`
+<details>
+Will update a current projects name
+
+| **Param**     | **Value**     | **Description**  |
+| ------------- |:-------------:| ----------------|
+| `user_id`     | *integer*     | **required** Which user a project is attributed to:, ex: `1`|
+| `project_id`  | *integer*     | **required** Which project to update:, ex: `1` |
+| `project_name`| *string*      | **required** New Projects name, ex: `Neon` |
+
+### Sample PATCH Request
+```javascript
+{
+	"user_id": 1,
+	"project_id": 1,
+	"project_name": "Neon"
+ }
+```
+
+### Sample PATCH Response
+```javascript
+"Updated to Neon"
+```
+</details>
+
+# PATCH Update A Palettes Name For A User
+`PATCH /api/v1/:user_id/projects/:project_id/palettes/:id`
+<details>
+Will update a current palettes name
+
+| **Param**     | **Value**     | **Description**  |
+| ------------- |:-------------:| ----------------|
+| `user_id`     | *integer*     | **required** Which user a project is attributed to:, ex: `1`|
+| `project_id`  | *integer*     | **required** Which project a palette is attributed to:, ex: `1` |
+| `id`          | *integer*     | **required** Which palette to update:, ex: `1` |
+| `palette_name`| *string*      | **required** New palettes name, ex: `Neon` |
+
+### Sample PATCH Request
+```javascript
+{
+	"user_id": 1,
+	"project_id": 1,
+	"id": 1,
+	"palette_name": "Bright Neon"
+ }
+```
+
+### Sample PATCH Response
+```javascript
+"Palette's name updated to Bright Neon"
+```
+</details>
