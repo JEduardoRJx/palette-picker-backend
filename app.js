@@ -228,4 +228,4 @@ app.patch('/api/v1/:user_id/projects/:project_id/palettes/:id', async (request, 
   }
 })
 
-export default app;
+module.exports = app;
