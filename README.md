@@ -12,6 +12,9 @@ Tone Zone API is a RESTful API. The following is documentation for Version (v1) 
 - [J. Eduardo Rodriguez](https://github.com/JEduardoRJx)
 - [Lacy Rudd](https://github.com/dawnlunacy)
 
+## Project Board
+- [Link to Project Board](https://github.com/users/JEduardoRJx/projects/1)
+
 ## Response Format
  Response format is in `JSON`
  
