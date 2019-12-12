@@ -183,7 +183,7 @@ Will POST a new project for a default user.
 ```javascript
   {
     "palette_name": "Warm Colors",
-    "project_id": 1
+    "user_id": 1
   }
 ```
 ### Sample POST Response
@@ -324,3 +324,6 @@ Will update a current palettes name
 "Palette's name updated to Bright Neon"
 ```
 </details>
+
+## Schema
+<img width="631" alt="Screen Shot 2019-12-02 at 9 07 43 PM" src="https://user-images.githubusercontent.com/48504854/70728556-de782080-1cbe-11ea-96aa-c665bb652143.png">
